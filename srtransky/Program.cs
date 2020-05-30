@@ -24,9 +24,6 @@ namespace srtransky
 
         [Option('r', "retries", Required = false, HelpText = "Retries count.", Default = 999)]
         public int Retries { get; set; }
-
-        [Option("rtmpdump", Required = false, HelpText = "Download with rtmpdump.", Default = false)]
-        public bool UseRtmpdump { get; set; }
     }
     class Program
     {
@@ -34,9 +31,8 @@ namespace srtransky
         {
             Parser.Default.ParseArguments<CmdOptions>(args).WithParsed(o =>
             {
-                var downloader = new Downloader(o.RoomName, o.OutputFile, o.Proxy, o.Thread, o.Retries, o.UseRtmpdump);
+                var downloader = new Downloader(o.RoomName, o.OutputFile, o.Proxy, o.Thread, o.Retries);
                 downloader.OnHlsUrlGet += Downloader_OnHlsUrlGet;
-                downloader.OnRtmpUrlGet += Downloader_OnRtmpUrlGet;
                 downloader.Init();
                 var url = downloader.WaitForUrl();
                 if(url == null)
