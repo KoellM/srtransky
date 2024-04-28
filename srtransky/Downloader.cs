@@ -166,8 +166,6 @@ namespace srtransky
             wsclient.OnClose += Wsclient_OnClose;
             wsclient.Connect();
             Console.WriteLine("Init: Connect to websocket server.");
-
-            StartHeartBeat();
         }
 
         private void Wsclient_OnClose(object sender, CloseEventArgs e)
@@ -188,18 +186,6 @@ namespace srtransky
             wsclient?.Close();
 
             HlsParsedEvent.Set();
-        }
-
-        private async void StartHeartBeat()
-        {
-            await Task.Run(async () =>
-            {
-                while (Running)
-                {
-                    await Task.Delay(60000);
-                    WSSend("PING\tshowroom");
-                }
-            });
         }
 
         private void Ws_OnMessage(object sender, MessageEventArgs e)
