@@ -136,7 +136,7 @@ namespace srtransky
 
         private JObject GetStreamingUrl()
         {
-            string StreamingApiUrl = "https://www.showroom-live.com/api/live/streaming_url?room_id=" + RoomId.ToString() + "&ignore_low_stream=1";
+            string StreamingApiUrl = "https://www.showroom-live.com/api/live/streaming_url?room_id=" + RoomId.ToString() + "&abr_available=1";
             try
             {
                 var StreamingApiString = HTTPGet(StreamingApiUrl);
@@ -239,7 +239,12 @@ namespace srtransky
         {
             await Task.Run(() =>
             {
-                HlsUrl = (from u in (json["streaming_url_list"] as JArray) where u["type"].ToString() == "hls" orderby u["quality"] select u["url"].ToString()).ToList()[0];
+                try {
+                    HlsUrl = (from u in (json["streaming_url_list"] as JArray) where u["type"].ToString() == "hls_all" select u["url"].ToString()).ToList()[0];
+                } catch
+                {
+                    HlsUrl = (from u in (json["streaming_url_list"] as JArray) where u["type"].ToString() == "hls" orderby u["quality"] select u["url"].ToString()).ToList().Last();
+                }
 
                 if (HlsUrl != null)
                 {
