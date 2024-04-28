@@ -171,6 +171,18 @@ namespace srtransky
         private void Wsclient_OnClose(object sender, CloseEventArgs e)
         {
             Console.WriteLine("Info: WebSocket closed.");
+            if (Running)
+            {
+                WSReconnect(sender, e);
+            }
+        }
+        
+        private void WSReconnect(object sender, CloseEventArgs e)
+        {
+            Console.WriteLine("WebSocket Reconnecting.");
+            Thread.Sleep(1000);
+
+            StartWebSocket();
         }
 
         private void WSSend(string data)
